@@ -54,20 +54,22 @@ const addNewPlayer = async (playerObj) => {
     }
 };
 
-const removePlayer = async (playerId) => {
+
+   const removePlayer = async (id) => {
+
     try {
-        const response = await fetch(`${APIURLBYID}`, {
+        const response = await fetch(`${APIURL}/${id}`, {
             method: 'DELETE',
             headers: {
               'Content-Type': 'application/json'
             },
           });
-          const player = await response.json();
-          // return party;
-          const partyList = await fetchAllPlayers();
-        console.log(partyList); 
-        // renderAllParties(parties)
-        renderAllPlayers(partyList)
+        const player = await response.json();
+        
+        // return player;
+        const playerList = await fetchAllPlayers();
+        console.log("removePlayer" + playerList); 
+        renderAllPlayers(playerList.data.players);
 
     } catch (err) {
         console.error(
@@ -98,11 +100,10 @@ const removePlayer = async (playerId) => {
  * @returns the playerContainerHTML variable.
  */
 
-    const renderAllPlayers = (playerList) => {
+    const renderAllPlayers = async (playerList) => {
     try {
         console.log(playerContainer);
         playerContainer.innerHTML = '';
-
         playerList.forEach((player) => {
           const playerElement = document.createElement('div');
           playerElement.classList.add('player');
@@ -129,9 +130,14 @@ const removePlayer = async (playerId) => {
           const deleteButton = playerElement.querySelector('.delete-button');
           deleteButton.addEventListener('click', async (event) => {
             // your code here
-            console.log('hello');
-            await removePlayer(player.id);
+            console.log('remove player');
             
+            await removePlayer(player.id);
+            //  await removePlayer(playerList.data.players.id);
+            // await removePlayer(playerList.data.player.id);
+            // await removePlayer(playerElement.player.id);
+            // await removePlayer(playerList.id);
+                        
           });
         });
         
@@ -161,10 +167,7 @@ const init = async () => {
     // renderAllPlayers(playerList);
     // Since we are working with objects and we use .forEach in renderAllPlayers
     renderAllPlayers(playerList.data.players);
-    
-
-    // renderAllPlayers(players);
-    // renderNewPlayerForm();
+        
 }
 
 init();
